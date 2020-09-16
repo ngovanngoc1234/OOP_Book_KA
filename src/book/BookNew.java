@@ -136,17 +136,18 @@ public class BookNew {
                 case 4:
                     System.out.println("Nhập Ngôn Ngữ Cần Tìm");
                     String string = sc.nextLine();
-                    int count = 0;
+                    int index = 0;
                     for (int i = 0; i < bookList.size(); i++) {
                         boolean check = bookList.get(i) instanceof ProgrammingBook;
                         if (check) {
-                            if (string.equals(((ProgrammingBook) bookList.get(i)).getLanguage()))
-                                count += 1;
+                            if (string.equals(((ProgrammingBook) bookList.get(i)).getLanguage())) {
+                                System.out.println("Sách Có Ngô Ngữ :" + bookList.get(i));
+                                index += 1;
+                            }
                         }
                     }
-                    if (count > 0) {
-                        System.out.println("Sách có Ngôn Ngữ : " + bookList.get(count) +
-                                "\n Số Sách Có Ngôn Ngữ Là " + count);
+                    if (index > 0) {
+                        System.out.println("\n Số Sách Có Ngôn Ngữ Là " + index);
                     } else {
                         System.out.println("Không Tìm Thấy ");
                     }
