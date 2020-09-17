@@ -1,6 +1,7 @@
 package book;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -46,25 +47,17 @@ public class BookNew {
                 25800000, "Ngô Văn Ngọc 10", "E");
 
 
-        List<Book> bookList = new ArrayList<>();
-
-        bookList.add(book1);
-        bookList.add(book2);
-        bookList.add(book3);
-        bookList.add(book4);
-        bookList.add(book5);
-        bookList.add(book6);
-        bookList.add(book7);
-        bookList.add(book8);
-        bookList.add(book9);
-        bookList.add(book10);
-        do {
-            System.out.println("mời chọn chức năng");
-            System.out.println("1 : Tính Tiền Từng Loại Sách : ");
-            System.out.println("2 : Sắp Xếp Theo Loại Bookcode Và Giá Tiền: ");
-            System.out.println("3 : Tổng Số Tiền Của Sách Trong Cửa Hàng:");
-            System.out.println("4 : Tìm Kiếm Ngôn Ngữ:");
-            System.out.println("5 : Thoát Chương Trình:");
+        List<Book> bookList = new ArrayList<>(Arrays.asList(book1, book2, book3, book4, book5));
+        bookList.addAll(Arrays.asList(book6, book7, book8, book9, book10));
+        while (true) {
+            for (String s : Arrays.asList("mời chọn chức năng",
+                    "1 : Tính Tiền Từng Loại Sách : ",
+                    "2 : Sắp Xếp Theo Loại Bookcode Và Giá Tiền: ",
+                    "3 : Tổng Số Tiền Của Sách Trong Cửa Hàng:",
+                    "4 : Tìm Kiếm Ngôn Ngữ:",
+                    "5 : Thoát Chương Trình:")) {
+                System.out.println(s);
+            }
             int n = Integer.parseInt(sc.nextLine());
             switch (n) {
                 case 1:
@@ -75,17 +68,19 @@ public class BookNew {
                     int sum1 = 0;
                     switch (num) {
                         case 1:
-                            for (int i = 0; i < bookList.size(); i++) {
-                                sum += bookList.get(i).getPrice();
+                            for (Book book : bookList) {
+                                sum += book.getPrice();
                             }
                             System.out.println("Tổng số tiền trong ProgrammingBook :" + sum);
                             break;
                         case 2:
-                            for (int i = 0; i < bookList.size(); i++) {
-                                sum1 += bookList.get(i).getPrice();
+                            for (Book book : bookList) {
+                                sum1 += book.getPrice();
                             }
                             System.out.println("Tổng số tiền trong FictionBook :" + sum1);
                             break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + num);
                     }
                     break;
                 case 2:
@@ -93,60 +88,75 @@ public class BookNew {
                     int nums = Integer.parseInt(sc.nextLine());
                     Book a;
                     switch (nums) {
-                        case 1:
-                            for (int i = 0; i < bookList.size() - 1; i++) {
-                                for (int j = 0; j < bookList.size() - 1 - i; j++) {
+                        case 1: {
+                            int i = bookList.size() - 2;
+                            while (i >= 0) {
+                                int j = 0;
+                                while (j < bookList.size() - 1 - i) {
                                     if (bookList.get(j).getPrice() > bookList.get(j + 1).getPrice()) {
                                         a = bookList.get(j);
                                         bookList.set(j, bookList.get(j + 1));
                                         bookList.set(j + 1, a);
                                     }
+                                    j++;
                                 }
+                                i--;
                             }
-                            for (int i = 0; i < bookList.size(); i++) {
-                                System.out.println(bookList.get(i).getPrice());
-                            }
-                            break;
+                        }
+                        for (Book value : bookList) {
+                            System.out.println(value.getPrice());
+                        }
+                        break;
                         case 2:
-                            for (int i = 0; i < bookList.size() - 1; i++) {
-                                for (int j = 0; j < bookList.size() - 1 - i; j++) {
-                                    if (bookList.get(j).getBookCode() > bookList.get(j + 1).getBookCode()) {
-                                        a = bookList.get(j);
-                                        bookList.set(j, bookList.get(j + 1));
-                                        bookList.set(j + 1, a);
+                            for (int i = bookList.size() - 2; i >= 0; i--) {
+                                int j = bookList.size() - 1 - i - 1;
+                                while (j >= 0) {
+                                    if (bookList.get(j).getBookCode() <= bookList.get(j + 1).getBookCode()) {
+                                        j--;
+                                        continue;
                                     }
+                                    a = bookList.get(j);
+                                    bookList.set(j, bookList.get(j + 1));
+                                    bookList.set(j + 1, a);
+                                    j--;
                                 }
                             }
-                            for (int i = 0; i < bookList.size(); i++) {
-                                System.out.println(bookList.get(i).getBookCode());
+                            for (Book book : bookList) {
+                                System.out.println(book.getBookCode());
                             }
                             break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + nums);
                     }
                     break;
                 case 3:
                     System.out.println("Nhập Giá");
                     int many = sc.nextInt();
-                    for (int i = 0; i < bookList.size(); i++) {
-                        if (many == bookList.get(i).getPrice()) {
-                            System.out.println("Tên Sách : " + bookList.get(i).getName() +
-                                    "\n Tên Tác Giả : " + bookList.get(i).getAuthor());
+                    for (Book book : bookList)
+                        if (many == book.getPrice()) {
+                            System.out.println("Tên Sách : " + book.getName() +
+                                    "\n Tên Tác Giả : " + book.getAuthor());
+                        } else {
+                            System.out.println("Không Tìm Thấy");
+                            break;
                         }
-                    }
                     break;
                 case 4:
                     System.out.println("Nhập Ngôn Ngữ Cần Tìm");
                     String string = sc.nextLine();
                     int index = 0;
-                    for (int i = 0; i < bookList.size(); i++) {
-                        boolean check = bookList.get(i) instanceof ProgrammingBook;
-                        if (check) {
-                            if (string.equals(((ProgrammingBook) bookList.get(i)).getLanguage())) {
-                                System.out.println("Sách Có Ngô Ngữ :" + bookList.get(i));
-                                index += 1;
-                            }
+                    for (Book book : bookList) {
+                        boolean check = book instanceof ProgrammingBook;
+                        if (!check) {
+                            continue;
                         }
+                        if (!string.equals(((ProgrammingBook) book).getLanguage())) {
+                            continue;
+                        }
+                        System.out.println("Sách Có Ngô Ngữ :" + book);
+                        index += 1;
                     }
-                    if (index > 0) {
+                    if (!(index <= 0)) {
                         System.out.println("\n Số Sách Có Ngôn Ngữ Là " + index);
                     } else {
                         System.out.println("Không Tìm Thấy ");
@@ -158,7 +168,6 @@ public class BookNew {
                     System.out.println("Lỗi");
             }
         }
-        while (true);
     }
 
 }
